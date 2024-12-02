@@ -1,11 +1,14 @@
 package es.cheste.clases;
 
+import com.sun.istack.NotNull;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-
+import java.util.stream.Collectors;
+//TODO queda comprobar si todos los parámetos de la clase son nulls y retocar contructores
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = "codi")})
 @NamedQuery(name = "Centre.findAll.nombres", query = "SELECT C.centre FROM Centre C")
@@ -23,6 +26,7 @@ public class Centre {
     @JoinColumn(name = "provincia_id", nullable = false)
     private Provincia provincia;
 
+    @NotNull
     private String codi;
     private String centre;
     private String direccio;
@@ -42,7 +46,7 @@ public class Centre {
         super();
     }
 
-    public Centre(int id, Regim regim, Provincia provincia, String codi, String centre, String direccio, String localitat, String telefon, String query) {
+    public Centre(int id, Regim regim, Provincia provincia, String codi, String centre, String direccio, String localitat, String telefon) {
         this.id = id;
         this.regim = regim;
         this.provincia = provincia;
@@ -51,10 +55,10 @@ public class Centre {
         this.direccio = direccio;
         this.localitat = localitat;
         this.telefon = telefon;
-        this.query = query;
+        obtenerQuery();
     }
 
-    public Centre(Regim regim, Provincia provincia, String codi, String centre, String direccio, String localitat, String telefon, String query) {
+    public Centre(Regim regim, Provincia provincia, String codi, String centre, String direccio, String localitat, String telefon) {
         this.regim = regim;
         this.provincia = provincia;
         this.codi = codi;
@@ -62,7 +66,7 @@ public class Centre {
         this.direccio = direccio;
         this.localitat = localitat;
         this.telefon = telefon;
-        this.query = query;
+        obtenerQuery();
     }
 
     public int getId() {
@@ -130,11 +134,25 @@ public class Centre {
     }
 
     public String getQuery() {
+
+
         return query;
     }
 
     public void setQuery(String query) {
         this.query = query;
+    }
+
+    private void obtenerQuery(){
+
+        this.query = Arrays.stream(centre.toLowerCase().split(" "))
+                .map(palabra -> palabra.substring(0,1).toUpperCase())
+                .collect(Collectors.joining("+"));
+    }
+
+    public void agregarCiclos(Cicle... ciclesAgregar ){
+
+        cicles.addAll(Arrays.asList(ciclesAgregar));
     }
 
     @Override

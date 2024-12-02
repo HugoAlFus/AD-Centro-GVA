@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
+//TODO queda comprobar si todos los parámetos de la clase son nulls y retocar contructores
 @Entity
 public class Regim {
 
@@ -30,6 +31,11 @@ public class Regim {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(id, nom);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -38,8 +44,12 @@ public class Regim {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, nom);
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Regim{");
+        sb.append("id=").append(id);
+        sb.append(", nom='").append(nom).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 
     public int getId() {
@@ -56,14 +66,5 @@ public class Regim {
 
     public void setNom(String nom) {
         this.nom = nom;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Regim{");
-        sb.append("id=").append(id);
-        sb.append(", nom='").append(nom).append('\'');
-        sb.append('}');
-        return sb.toString();
     }
 }

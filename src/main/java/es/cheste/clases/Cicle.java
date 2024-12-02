@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
+//TODO queda comprobar si todos los parámetos de la clase son nulls y retocar contructores
 @Entity
 public class Cicle {
 
