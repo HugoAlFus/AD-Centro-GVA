@@ -1,10 +1,14 @@
 package es.cheste.clases;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = "codi")})
+@NamedQuery(name = "Centre.findAll.nombres", query = "SELECT C.centre FROM Centre C")
 public class Centre {
 
     @Id
@@ -25,6 +29,14 @@ public class Centre {
     private String localitat;
     private String telefon;
     private String query;
+
+    @ManyToMany
+    @JoinTable(
+            name = "Cicle_Centre",
+            joinColumns = @JoinColumn(name = "centre_id"),
+            inverseJoinColumns = @JoinColumn(name = "cicle_id")
+    )
+    private List<Cicle> cicles = new ArrayList<>();
 
     public Centre() {
         super();

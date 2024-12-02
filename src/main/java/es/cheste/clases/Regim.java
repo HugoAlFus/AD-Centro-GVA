@@ -2,6 +2,7 @@ package es.cheste.clases;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -10,8 +11,10 @@ public class Regim {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String nom;
+
+    @OneToMany(mappedBy = "regim", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Centre> centres;
 
     public Regim() {
         super();

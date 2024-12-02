@@ -1,10 +1,9 @@
 package es.cheste.clases;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -15,6 +14,13 @@ public class Cicle {
     private int id;
     private String codi;
     private String nom;
+    @ManyToMany
+    @JoinTable(
+            name = "Cicle_Centre",
+            joinColumns = @JoinColumn(name = "cicle_id"),
+            inverseJoinColumns = @JoinColumn(name = "centre_id")
+    )
+    private List<Centre> centres = new ArrayList<>();
 
     public Cicle() {
         super();
@@ -43,6 +49,7 @@ public class Cicle {
     public int hashCode() {
         return Objects.hash(id, codi, nom);
     }
+
 
     public int getId() {
         return id;
