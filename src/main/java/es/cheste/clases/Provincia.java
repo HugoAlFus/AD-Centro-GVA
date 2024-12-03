@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.Objects;
-//TODO queda comprobar si todos los parámetos de la clase son nulls y retocar contructores
+
+/**
+ * Clase que representa una provincia.
+ */
 @Entity
 public class Provincia {
 
@@ -15,15 +18,29 @@ public class Provincia {
     @OneToMany(mappedBy = "provincia", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Centre> centres;
 
+    /**
+     * Constructor por defecto.
+     */
     public Provincia() {
         super();
     }
 
+    /**
+     * Constructor con todos los parámetros.
+     *
+     * @param id   Identificador de la provincia.
+     * @param nom  Nombre de la provincia.
+     */
     public Provincia(int id, String nom) {
+        this(nom);
         this.id = id;
-        this.nom = nom;
     }
 
+    /**
+     * Constructor sin el identificador.
+     *
+     * @param nom  Nombre de la provincia.
+     */
     public Provincia(String nom) {
         this.nom = nom;
     }

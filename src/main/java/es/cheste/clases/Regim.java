@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
-//TODO queda comprobar si todos los parámetos de la clase son nulls y retocar contructores
+/**
+ * Clase que representa un régimen educativo.
+ */
 @Entity
 public class Regim {
 
@@ -17,15 +19,29 @@ public class Regim {
     @OneToMany(mappedBy = "regim", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Centre> centres;
 
+    /**
+     * Constructor por defecto.
+     */
     public Regim() {
         super();
     }
 
+    /**
+     * Constructor con todos los parámetros.
+     *
+     * @param id   Identificador del régimen.
+     * @param nom  Nombre del régimen.
+     */
     public Regim(int id, String nom) {
+        this(nom);
         this.id = id;
-        this.nom = nom;
     }
 
+    /**
+     * Constructor sin el identificador.
+     *
+     * @param nom  Nombre del régimen.
+     */
     public Regim(String nom) {
         this.nom = nom;
     }
@@ -43,15 +59,6 @@ public class Regim {
         return id == regim.id && Objects.equals(nom, regim.nom);
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Regim{");
-        sb.append("id=").append(id);
-        sb.append(", nom='").append(nom).append('\'');
-        sb.append('}');
-        return sb.toString();
-    }
-
     public int getId() {
         return id;
     }
@@ -66,5 +73,14 @@ public class Regim {
 
     public void setNom(String nom) {
         this.nom = nom;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Regim{");
+        sb.append("id=").append(id);
+        sb.append(", nom='").append(nom).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

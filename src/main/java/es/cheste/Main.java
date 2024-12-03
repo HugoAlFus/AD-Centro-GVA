@@ -17,26 +17,32 @@ public class Main {
 
     public static void main(String[] args) {
 
+        StringBuilder sb = new StringBuilder();
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("Centros");
 
         EntityManager em = emf.createEntityManager();
 
-        System.out.println(listarNombresCentro(em));
-        System.out.println("---------------------------------------------------------------");
-        System.out.println(listarNombreCentroProvincia(em));
-        System.out.println("---------------------------------------------------------------");
-        System.out.println(listarNomCodiCicle(em));
-        System.out.println("---------------------------------------------------------------");
-        System.out.println(listarCentrosPorCicle(em));
-        System.out.println("---------------------------------------------------------------");
-        System.out.println(listarCentroID(em));
-        System.out.println("---------------------------------------------------------------");
-        System.out.println(crearEntidad(em));
+        sb.append(listarNombresCentro(em)).append("---------------------------------------------------------------\n");
+        sb.append(listarNombreCentroProvincia(em)).append("---------------------------------------------------------------\n");
+        sb.append(listarNomCodiCicle(em)).append("---------------------------------------------------------------\n");
+        sb.append(listarCentrosPorCicle(em)).append("---------------------------------------------------------------\n");
+        sb.append(listarCentroID(em)).append("---------------------------------------------------------------\n");
+        sb.append(crearEntidad(em)).append("---------------------------------------------------------------\n");
+        sb.append(actualizarTelefonoCentro(em)).append("---------------------------------------------------------------\n");
+        sb.append(eliminarCentro(em));
 
         em.close();
         emf.close();
+
+        System.out.println(sb.toString());
     }
 
+    /**
+     * Lista los nombres de todos los centros.
+     *
+     * @param em EntityManager para realizar la consulta.
+     * @return String con los nombres de los centros.
+     */
     @SuppressWarnings("unchecked")
     private static String listarNombresCentro(EntityManager em) {
 
@@ -51,6 +57,12 @@ public class Main {
         return sb.toString();
     }
 
+    /**
+     * Lista los nombres de los centros de la provincia de Valencia.
+     *
+     * @param em EntityManager para realizar la consulta.
+     * @return String con los nombres de los centros de la provincia de Valencia.
+     */
     @SuppressWarnings("unchecked")
     private static String listarNombreCentroProvincia(EntityManager em) {
 
@@ -66,6 +78,12 @@ public class Main {
         return sb.toString();
     }
 
+    /**
+     * Lista los nombres y códigos de todos los ciclos.
+     *
+     * @param em EntityManager para realizar la consulta.
+     * @return String con los nombres y códigos de los ciclos.
+     */
     @SuppressWarnings("unchecked")
     private static String listarNomCodiCicle(EntityManager em) {
 
@@ -84,6 +102,12 @@ public class Main {
         return sb.toString();
     }
 
+    /**
+     * Lista los centros donde se imparte el ciclo DAM.
+     *
+     * @param em EntityManager para realizar la consulta.
+     * @return String con los centros donde se imparte DAM.
+     */
     private static String listarCentrosPorCicle(EntityManager em) {
 
         StringBuilder sb = new StringBuilder("--La lista de todos los centros donde se imparte DAM--\n");
@@ -98,9 +122,15 @@ public class Main {
         return sb.toString();
     }
 
+    /**
+     * Obtiene el centro con la id especificada.
+     *
+     * @param em EntityManager para realizar la consulta.
+     * @return String con la información del centro.
+     */
     private static String listarCentroID(EntityManager em) {
 
-        StringBuilder sb = new StringBuilder("--La lista del centro con la id = 18--\n");
+        StringBuilder sb = new StringBuilder("--Obtener el centro con la id = 18--\n");
 
         Query query = em.createQuery("SELECT c FROM Centre c where c.id = :id");
         query.setParameter("id", 18);
@@ -112,6 +142,12 @@ public class Main {
         return sb.toString();
     }
 
+    /**
+     * Crea una nueva entidad en la base de datos.
+     *
+     * @param em EntityManager para realizar la operación.
+     * @return String con la información de la entidad creada.
+     */
     private static String crearEntidad(EntityManager em) {
 
         StringBuilder sb = new StringBuilder("--Se va a intentar introducir un dato nuevo a la base de datos--\n");
@@ -140,6 +176,15 @@ public class Main {
         return sb.toString();
     }
 
+    /**
+     * Obtiene una entidad de la base de datos.
+     *
+     * @param em         EntityManager para realizar la consulta.
+     * @param entidad    Nombre de la entidad.
+     * @param campo      Campo de búsqueda.
+     * @param datoBuscar Valor a buscar.
+     * @return La entidad encontrada o null si no se encuentra.
+     */
     private static Object obtenerEntidadBD(EntityManager em, String entidad, String campo, String datoBuscar) {
 
         String sqlBusqueda = "SELECT e FROM " + entidad + " e " + " WHERE e." + campo + " = :" + campo;
@@ -150,7 +195,48 @@ public class Main {
         return query.getSingleResultOrNull();
     }
 
-    //TODO queda hacer actualización de teléfono
-    //Todo queda borrar centro IES LA MAR, comprobar como borrar
+    /**
+     * Actualiza el teléfono de un centro.
+     *
+     * @param em EntityManager para realizar la operación.
+     * @return String con el resultado de la actualización.
+     */
+    public static String actualizarTelefonoCentro(EntityManager em) {
+        StringBuilder sb = new StringBuilder("--Actualizar el teléfono del centro--\n");
 
+        em.getTransaction().begin();
+        Query query = em.createQuery("update Centre c set c.telefon = ?1 where UPPER(c.centre) = UPPER(?2)");
+        query.setParameter(1, "678678112");
+        query.setParameter(2, "IES LA MAR");
+
+        int valorActualizado = query.executeUpdate();
+
+        sb.append("Se han actualizado: ").append(valorActualizado).append(" valores").append("\n");
+
+        em.getTransaction().commit();
+
+        return sb.toString();
+    }
+
+    /**
+     * Elimina un centro de la base de datos.
+     *
+     * @param em EntityManager para realizar la operación.
+     * @return String con el resultado de la eliminación.
+     */
+    public static String eliminarCentro(EntityManager em) {
+
+        StringBuilder sb = new StringBuilder("--Eliminar un centro de la base de datos--\n");
+        Centre centre = (Centre) obtenerEntidadBD(em, "Centre", "centre", "IES LA MAR");
+
+        if (centre != null) {
+            em.getTransaction().begin();
+            em.remove(centre);
+            em.getTransaction().commit();
+            sb.append("Centro eliminado correctamente: ").append(centre.toString()).append("\n");
+        } else {
+            sb.append("Centro no encontrado\n");
+        }
+        return sb.toString();
+    }
 }

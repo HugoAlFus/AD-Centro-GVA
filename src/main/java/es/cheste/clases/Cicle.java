@@ -5,7 +5,10 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-//TODO queda comprobar si todos los parámetos de la clase son nulls y retocar contructores
+
+/**
+ * Clase que representa un ciclo educativo.
+ */
 @Entity
 public class Cicle {
 
@@ -22,16 +25,31 @@ public class Cicle {
     )
     private List<Centre> centres = new ArrayList<>();
 
+    /**
+     * Constructor por defecto.
+     */
     public Cicle() {
         super();
     }
 
+    /**
+     * Constructor con todos los parámetros.
+     *
+     * @param id    Identificador del ciclo.
+     * @param codi  Código del ciclo.
+     * @param nom   Nombre del ciclo.
+     */
     public Cicle(int id, String codi, String nom) {
+        this(codi, nom);
         this.id = id;
-        this.codi = codi;
-        this.nom = nom;
     }
 
+    /**
+     * Constructor sin el identificador.
+     *
+     * @param codi  Código del ciclo.
+     * @param nom   Nombre del ciclo.
+     */
     public Cicle(String codi, String nom) {
         this.codi = codi;
         this.nom = nom;
@@ -49,7 +67,6 @@ public class Cicle {
     public int hashCode() {
         return Objects.hash(id, codi, nom);
     }
-
 
     public int getId() {
         return id;

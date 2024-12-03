@@ -8,7 +8,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-//TODO queda comprobar si todos los parámetos de la clase son nulls y retocar contructores
+
+/**
+ * Clase que representa un centro educativo.
+ */
 @Entity
 @Table(uniqueConstraints = {@UniqueConstraint(columnNames = "codi")})
 @NamedQuery(name = "Centre.findAll.nombres", query = "SELECT C.centre FROM Centre C")
@@ -42,22 +45,41 @@ public class Centre {
     )
     private List<Cicle> cicles = new ArrayList<>();
 
+    /**
+     * Constructor por defecto.
+     */
     public Centre() {
         super();
     }
 
+    /**
+     * Constructor con todos los parámetros.
+     *
+     * @param id        Identificador del centro.
+     * @param regim     Régimen del centro.
+     * @param provincia Provincia del centro.
+     * @param codi      Código del centro.
+     * @param centre    Nombre del centro.
+     * @param direccio  Dirección del centro.
+     * @param localitat Localidad del centro.
+     * @param telefon   Teléfono del centro.
+     */
     public Centre(int id, Regim regim, Provincia provincia, String codi, String centre, String direccio, String localitat, String telefon) {
+        this(regim, provincia, codi, centre, direccio, localitat, telefon);
         this.id = id;
-        this.regim = regim;
-        this.provincia = provincia;
-        this.codi = codi;
-        this.centre = centre;
-        this.direccio = direccio;
-        this.localitat = localitat;
-        this.telefon = telefon;
-        obtenerQuery();
     }
 
+    /**
+     * Constructor sin el identificador.
+     *
+     * @param regim     Régimen del centro.
+     * @param provincia Provincia del centro.
+     * @param codi      Código del centro.
+     * @param centre    Nombre del centro.
+     * @param direccio  Dirección del centro.
+     * @param localitat Localidad del centro.
+     * @param telefon   Teléfono del centro.
+     */
     public Centre(Regim regim, Provincia provincia, String codi, String centre, String direccio, String localitat, String telefon) {
         this.regim = regim;
         this.provincia = provincia;
@@ -134,8 +156,6 @@ public class Centre {
     }
 
     public String getQuery() {
-
-
         return query;
     }
 
@@ -143,16 +163,22 @@ public class Centre {
         this.query = query;
     }
 
-    private void obtenerQuery(){
-
-        this.query = Arrays.stream(centre.toLowerCase().split(" "))
-                .map(palabra -> palabra.substring(0,1).toUpperCase())
+    /**
+     * Método privado para obtener la query a partir del nombre del centro.
+     */
+    private void obtenerQuery() {
+        this.query = Arrays.stream(this.centre.toLowerCase().split(" "))
+                .map(palabra -> palabra.substring(0, 1).toUpperCase() + palabra.substring(1))
                 .collect(Collectors.joining("+"));
     }
 
-    public void agregarCiclos(Cicle... ciclesAgregar ){
-
-        cicles.addAll(Arrays.asList(ciclesAgregar));
+    /**
+     * Método para agregar ciclos al centro.
+     *
+     * @param ciclesAgregar Ciclos a agregar.
+     */
+    public void agregarCiclos(Cicle... ciclesAgregar) {
+        this.cicles.addAll(Arrays.asList(ciclesAgregar));
     }
 
     @Override
