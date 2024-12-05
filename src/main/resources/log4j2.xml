@@ -11,7 +11,7 @@
         </File>
     </Appenders>
     <Loggers>
-        <Root level="info">
+        <Root level="error">
             <AppenderRef ref="LogToFile"/>
         </Root>
         <Logger name="Control_Acceso" level="info">

@@ -34,7 +34,7 @@ public class Main {
         em.close();
         emf.close();
 
-        System.out.println(sb.toString());
+        System.out.println(sb);
     }
 
     /**
@@ -132,12 +132,14 @@ public class Main {
 
         StringBuilder sb = new StringBuilder("--Obtener el centro con la id = 18--\n");
 
-        Query query = em.createQuery("SELECT c FROM Centre c where c.id = :id");
+        Query query = em.createQuery("SELECT c FROM Centre c WHERE c.id = :id");
         query.setParameter("id", 18);
 
         Centre centre = (Centre) query.getSingleResultOrNull();
 
-        sb.append(centre.toString()).append("\n");
+        if (centre != null) {
+            sb.append(centre).append("\n");
+        } else sb.append("No existe el centro con la id proporcionada\n");
 
         return sb.toString();
     }
@@ -168,7 +170,7 @@ public class Main {
 
             em.getTransaction().commit();
 
-            sb.append("Se ha introducido correctamente a la base de datos ").append(centre.toString()).append("\n");
+            sb.append("Se ha introducido correctamente a la base de datos ").append(centre).append("\n");
         } else {
             sb.append("No se pudo insertar a la base de datos\n");
             LOGGER.error("Se introdujo un valor null regim={}, provincia={}, dam={}, daw={}, smx={}", regim, provincia, dam, daw, smx);
@@ -205,7 +207,7 @@ public class Main {
         StringBuilder sb = new StringBuilder("--Actualizar el teléfono del centro--\n");
 
         em.getTransaction().begin();
-        Query query = em.createQuery("update Centre c set c.telefon = ?1 where UPPER(c.centre) = UPPER(?2)");
+        Query query = em.createQuery("UPDATE Centre c SET c.telefon = ?1 WHERE UPPER(c.centre) = UPPER(?2)");
         query.setParameter(1, "678678112");
         query.setParameter(2, "IES LA MAR");
 
@@ -233,7 +235,7 @@ public class Main {
             em.getTransaction().begin();
             em.remove(centre);
             em.getTransaction().commit();
-            sb.append("Centro eliminado correctamente: ").append(centre.toString()).append("\n");
+            sb.append("Centro eliminado correctamente: ").append(centre).append("\n");
         } else {
             sb.append("Centro no encontrado\n");
         }
